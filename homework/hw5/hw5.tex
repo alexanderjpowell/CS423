@@ -1,0 +1,151 @@
+%%%%%%%%%%%%%
+% 
+% Alexander Powell
+% Finite Automata
+% Homework Assignment #5
+% 10.15.2015
+% 
+%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+
+\usepackage{times,mathptm}
+\usepackage{pifont}
+\usepackage{exscale}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{tikz}
+
+
+\textwidth 6.5in
+\textheight 9in
+\oddsidemargin -0.0in
+\topmargin -0.0in
+
+\parindent 0pt     % How much the first word of a paragraph is indented. 
+\parskip 0pt	   % How much extra space to leave between paragraphs.
+
+\begin{document}
+
+\begin{center}             % If you only centering 1 line use \centerline{}
+\begin{LARGE}
+{\bf Finite Automata Homework 5}
+\end{LARGE}
+\vskip 0.25cm      % vertical skip (0.25 cm)
+
+Due: Thursday, Oct 15\\  % force new line
+Alexander Powell
+\end{center}
+
+\begin{enumerate}
+
+\item % Problem 1
+(a) Let $B = \{ 1^ky | y \in \{ 0,1 \}^* \}$ and $y$ contains at least $k$ $1s$ for $k \geq 1$.  Prove $B$ is regular.  
+
+\textbf{Solution: }
+\begin{proof}
+
+To prove $B$ is regular we simply need to create a regular expression that generates all words in $B$.  We know that all words need to start with a $1$ and they need to have at least one more $1$ somewhere in them.  The regex is shown below:
+$$ (1)(0)^*(1)(0 \cup 1)^* $$
+
+\end{proof}
+
+(b) Let $C = \{ 1^ky | y \in \{ 0,1 \}^* \}$ and $y$ contains at most $k$ $1s$ for $k \geq 1$.  Prove $C$ is not regular.  
+
+\begin{proof}
+
+To prove $C$ is not regular we can use the pumping lemma for regular languages.  Begin by assuming that $C$ is indeed a regular language, then the pumping lemma applies.  We can choose our $s$ to be $s = 1^P01^p$, $s = xy^iz$, $|xy| \leq P$, and $|y| \neq 0$ where $P$ is our pumping length.  From this, we can see the string $xy$ in $s$ is composed only of $1s$ since its length is less than $P$.  Therefore, we can write $$s = 1^k1^m1^{P-k-m}01^P,$$ where $x = 1^k$, $y = 1^m$, and $z = 1^{P-k-m}01^P$.  
+
+By taking $i = 0$ so $xy^0z = 1^k1^{P-k-m}01^P = 1^{P-k}01^P$.  Here we have the number of $1s$ in the second part of the string is larger than the number of $1s$ in the first part, so $xy^0z$ is not an element of $C$.  This is a contradiction to our assumption, and therefore $C$ is not a regular language.  
+
+\end{proof}
+
+\item % Problem 2
+Give the context free grammar for the complement of the language
+$$ A = \{ a^nb^n | n \geq 0 \} $$
+
+\textbf{Solution: }
+The given language contains all words with some number of $a$s followed by an equal number of $b$s.  Therefore, the complement can be described as the language of all strings where the number of $a$s and $b$s differ as well as all strings not in the pattern of $a^ib^j$.  This can be written as:
+$$ \bar{A} = \{ a^ib^j | i > j \} \cup \{ a^ib^j | i < j \} \cup (a \cup b)^*b(a \cup b)^*a(a \cup b)^* $$
+Then the union of these languages can be represented with the grammar:
+$$ S \rightarrow S_1 | S_2 | S_3 $$
+The language $\{ a^ib^j | i > j \}$ can be represented with:
+$$ S_1 \rightarrow aS_1b | aS_1 | a $$
+and the language $\{ a^ib^j | i < j \}$ can be represented with:
+$$ S_2 \rightarrow aS_2b | S_2b | b $$
+The regular expression is represented with 
+$$ S_3 \rightarrow S_4bS_4aS_4 $$
+$$ S_4 \rightarrow aS_4 | bS_4 | \epsilon $$
+
+Finally, we can write the context free grammar as a whole with:
+$$ S \rightarrow S_1 | S_2 | S_3 $$
+$$ S_1 \rightarrow aS_1b | aS_1 | a $$
+$$ S_2 \rightarrow aS_2b | S_2b | b $$
+$$ S_3 \rightarrow S_4bS_4aS_4 $$
+$$ S_4 \rightarrow aS_4 | bS_4 | \epsilon $$
+
+
+\item % Problem 3
+
+\textbf{Solution:}
+\begin{enumerate}
+
+\item
+The language of this grammar can be defined as the union of two sets.  All strings generated from $T$ can be represented as the language
+$$ S_1 = \{ 0^i\#0^j | i,j \geq 0 \}, $$
+and all strings generated from $U$ can be represented as the language
+$$ S_2 = \{ 0^i\#0^{2i} | i \geq 0 \} .$$
+The language can be written as $S_1S_1 \cup S_2$.  
+
+\item
+To prove $L(G)$ is not regular we will use closure properties.  Begin by assuming that $L(G)$ is a regular language.  Take the homomorphism $H_1$ where $H_1(0) = 0$, $H_1(\#) = \#$, and $H_1(1) = 00$.  Also let $M_1 = H_1^{-1}(L(G))$ and $M_2 = M_1 \cap (0^*\#1^*)$.  Then we can write $M_2 = \{ 0^i\#1^i | i \geq 0 \}$.  
+
+Now, let's take another homomorphism $H_2$ where $H_2(0) = 0$, $H_2(1) = 1$, and $H_2(\#) = \epsilon$ and $M_3 = H_2(M_2) = \{ 0^n1^n | n \geq 0 \}$.  
+
+Since $M_1, M_2$, and $M_3$ are obtained through $L(G)$, using closure properties that preserve regularity, and we see that $M_3$ is clearly a non-regular language, we have a contradiction to our original assumption.  Therefore $L(G)$ is not regular.  
+
+\end{enumerate}
+
+\item % Problem 4
+Give the context free grammar for the language
+$$ L = \{ a^ib^jc^k | i + j \neq k \} $$
+
+\textbf{Solution: }
+It's easiest to begin by creating a grammar that generates the complement of the language (ie. when $i+j = k$).  To start, we can write the two production rules 
+$$ C \rightarrow aCc | B $$
+$$ B \rightarrow bBc | \epsilon $$
+\newpage
+Now, to change this grammar to generate words in the language where $i+j \neq k$ we can add the following production rules to ensure cases where $i+j < k$
+$$ S_1 \rightarrow Lc $$
+$$ L \rightarrow Lc | C $$
+Now, we need to create production rules when $i+j > k$, shown below.  
+$$ S_2 \rightarrow R_bb | R_aa $$
+$$ R_a \rightarrow R_aa | R_b | C $$
+$$ R_b \rightarrow R_bb | B $$
+
+By putting all the rules together to form one context free grammar, we get:
+$$ S \rightarrow S_1 | S_2 $$
+$$ S_1 \rightarrow Lc $$
+$$ L \rightarrow Lc | C $$
+$$ S_2 \rightarrow R_bb | R_aa $$
+$$ R_a \rightarrow R_aa | R_b | C $$
+$$ R_b \rightarrow R_bb | B $$
+$$ B \rightarrow bBc | \epsilon $$
+$$ C \rightarrow aCc | B $$
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%
+% 
+% Alexander Powell
+% Finite Automata
+% Homework Assignment #10
+% 11.19.2015
+% 
+%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+
+\usepackage{times,mathptm}
+\usepackage{pifont}
+\usepackage{exscale}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{enumerate}
+\usepackage{array}
+\usepackage{lipsum}
+
+
+\textwidth 6.5in
+\textheight 9in
+\oddsidemargin -0.0in
+\topmargin -0.0in
+
+\parindent 0pt     % How much the first word of a paragraph is indented. 
+\parskip 0pt	   % How much extra space to leave between paragraphs.
+
+\begin{document}
+
+\begin{center}             % If you're only centering 1 line use \centerline{}
+\begin{LARGE}
+{\bf Finite Automata Homework 10}
+\end{LARGE}
+\vskip 0.25cm      % vertical skip (0.25 cm)
+
+Due: Thursday, Nov 19\\  % force new line
+Alexander Powell
+\end{center}
+
+\begin{enumerate}
+
+\item Prove that $A = \{ w_{2i}\text{ }|\text{ }w_{2i} \not \in L(M_i) \}$ is not Turing-recognizable, where $w_{2i}$ is the $2i$th string in the lexicographicorder of binary strings and $M_i$ is the TM whose binary code is $w_i$.
+
+\textbf{Solution: }
+\begin{proof}
+
+If $A = \{ w_{2i}\text{ }|\text{ }w_{2i} \not \in L(M_i) \}$, then we can also write $A = \{ <M>|M \text{ is a TM which doesn't accept }<M> \}$.  Let's assume that $A$ is Turing recognizable.  Then there exists a TM $M$ such that $A = L(M_i)$, for each $i$.  From the definition of $A$, we know $w_{2i} \in A$ when $w_{2i} \not \in L(M_i)$, which is the case when $w_{2i} \in L(M_i)$.  This is a contradiction to our assumption.  Therefore, we can conclude that $A$ is not Turing recognizable.  
+
+\end{proof}
+
+\item Prove that $ES_{TM} = \{ \text{code of M: TM M accepts the empty string} \}$ is undecidable. (Hint: Reduction from $A_{TM}$.)
+
+\textbf{Solution: }
+\begin{proof}
+
+We begin by reducing from $A_{TM}$.  Let's assume, to the contrary, that $M$ can decide $ES_{TM}$.  Then we can construct a Turing machine $D$ that uses $M$ to show $A_{TM}$ is Turing decideable.  The machine $D$ works as follows:
+$D$ takes in the input $<M,w>$.  Inside $D$, the machine will process each string.  $M$ runs on $w$; if $M$ accepts $w$, then $D$ accepts, else $D$ rejects.  
+
+Since this machine decides $A_{TM}$, we have a contradiction to the statement that $A_{TM}$ is non Turing decideable.  
+Therefore, we can conclude that our assumption is false and this $ES_{TM}$ is not decideable.  
+
+\end{proof}
+
+\item Let $T = \{<M>\text{ }|\text{ }M\text{ is a TM that accepts }w^R\text{ whenever it accepts w }\}$. Show that $T$
+is undecidable.  
+
+\textbf{Solution: }
+\begin{proof}
+
+We will use a proof by contradiction.  Let's assume, to the contrary, that $T$ is decideable.  Then there exists some Turing machine $D$ that decides $T$.  We can reduce $A_{TM}$ to $T$, where 
+$$ A_{TM} = \{ <M,w>\text{ }|\text{ }M \text{ is a TM that accepts }w \}, $$
+and we know $A_{TM}$ is undecidable.  Also, we will denote the machine that accepts $A_{TM}$ as $A$.  The description of $A$ is as follows:\\
+It will take in an input of $<M,w>$ ($M$ is a Turing machine and $w$ is a string).  
+\begin{enumerate}
+\item First, $A$ will contruct TM $R$.  On input $x$: 
+\item If $x$ is in a reversible form, then $R$ accepts.  If not, then $w$ is run through $R$ and either accepts of rejects.  
+\item Then $T$ is run on the code of $<R>$.  If $T$ accepts then $A$ accepts, and if $T$ rejects then $A$ rejects.  
+\end{enumerate}
+Thus, we have shown that $A_{TM}$ is decidable, which is a contradiction to our original assumption.  Therefore, we can conclude that $T$ is undecidable.  
+\end{proof}
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

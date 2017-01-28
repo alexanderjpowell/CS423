@@ -1,0 +1,198 @@
+
+%% bare_conf.tex
+%% V1.4
+%% 2012/12/27
+%% by Michael Shell
+%% See:
+%% http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.8 or later) with an IEEE conference paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+
+
+\documentclass[conference]{IEEEtran}
+\ifCLASSINFOpdf
+\else
+\fi
+
+\usepackage{times,mathptm}
+\usepackage{enumerate}
+\usepackage{pifont}
+\usepackage{exscale}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{relsize}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+% can use linebreaks \\ within to get better formatting as desired
+% Do not put math or special symbols in the title.
+\title{Elliptic Curve Cryptography}
+
+
+\author{
+\IEEEauthorblockN{Alexander Powell}
+\IEEEauthorblockA{College of William \& Mary\\
+Department of Computer Science\\
+Email: ajpowell@email.wm.edu}
+}
+
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+\begin{abstract}
+This paper provides an overview of Elliptic Curve Cryptography.  It also discusses its implementation over two finite fields.  Additionally, we will discuss its benefits and shortcomings as well as the future potential of this type of public key cryptography.  
+\end{abstract}
+
+\text{ }
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+Elliptic Curve Cryptography (ECC) is a type of public key cryptography (PKC) which uses algorithms based on mathematical problems without an efficient solution.  Some of the early PKC systems relied on factoring large integers composed of two or more large prime factors.  Elliptic Curve Cryptography is a method of cryptography that relies on elliptic curves to provide security.  The use of elliptic curves for purposes related to cryptography was proposed by both Neal Koblitz and Victor S Miller in 1985.  By 2004, ECC algorithms had gained significant popularity.  
+
+\text{ }
+
+\section{Overview}
+In general, the first assumption followed when dealing with ECC is that the equation of an ellipse is written as 
+$$y2=x^3+ax+b \text{ where } 4a^3+27b^2 \neq 0$$
+This equation is called the Weierstrass normal form for elliptic curves.  Clearly, by changing the values for $a$ and $b$ the curve will take on different points.  Also, in general elliptic curves are symmetric about the x-axis.  Additionally, a point at infinity or ideal point will be part of the curve.  This point is often denoted with a 0, giving the following definition for an elliptic curve
+$$\{ (x,y) \in \mathbb{R}^2\text{ }|\text{ }y^2=x^3+ax+b,\text{ }4a^3+27b^2 \neq 0 \} \cup \{ 0 \}$$
+The next step is to define a group over elliptic curves.  To prove something is a group, it must satisfy the following properties: closure, associativity, identity, and inverse.  In our case, a group over elliptic curves can be established because all points on the curve make up the elements of the group, the identity element is said to be the point at infinity or ideal point.  The inverse of a point in the group is the one symmetric about the x-axis.  Finally, addition is given by the rule $P + Q + R = 0$ where $P$, $G$, and $R$ are three points on the same line.  
+Just like a lot of other PKC systems rely on factoring large numbers, the security of ECC depends on the difficulty of what`s called the Discrete Logarithm Problem.$^{[1]}$  In this problem, $P$ and $Q$ are two points on an elliptic curve such that $kP=Q$ where $k$ is a scalar.  Given $P$ and $Q$, it’s incredibly difficult to solve for $k$ if $k$ is sufficiently large.  Also, k is the discrete logarithm of $Q$ to the base $P$.  The discrete logarithm problem is believed to be a ``hard" problem, meaning it has no known polynomial time algorithm.  However, this belief has not been formally proved.  This brings us to the main operation involved in the ECC system, point multiplication.  
+
+
+\section{Point Multiplication}
+The basic idea behind point multiplication in ECC is multiplying a point $P$ on an elliptic curve with a scalar $k$ to obtain another point $Q$ on the same elliptic curve.  There are two components to point multiplication: point addition and point doubling.$^{[2]}$  In point addition, two points $J$ and $K$ are added together to obtain a new point $L (J + K = L)$.  In point doubling, a point is added to itself (or multiplied by 2) to obtain a new point $(2 \times J = J + J = L)$.  An example of point multiplication with a point $P$ and $k=23$ is given as: $$23P = 2(2(2(2P)+P)+P)+P.$$  Here, we can see that point multiplication utilizes point addition and doubling repeatedly to find the solution.  This is referred to as the double and add method, although there are many other strategies.  We can also view this algebraically.  First, take two points on an elliptic curve, $J$ and $K$, where $J = (x_J, y_J)$ and $K = (x_k, y_k)$.  Now let $L = J + K$ where $L = (x_L, y_L)$, which gives us $x_L = s^2 - x_J - x_k$ and $y_L = -y_J + s(x_J - x_L)$ and $s = (y_J - y_k)/(x_J - x_k)$, where $s$ is the slope of the line through points J and K.  We can clearly see that is $K = -J$ meaning $K = (x_J, -y_J)$ then $J + K = 0$ where $0$ is the point at infinity or ideal point.$^{[1]}$  Also, if K = J then it follows that $J + K = 2J$ and point doubling equations can be used.  Additionally, we can see that the commutative property holds and $J + K = K + J$.
+
+
+
+\section{Finite Fields}
+In the previous examples, we’ve computed point multiplications for real numbers.  These types of operations over the set of real numbers can be slow as well as inaccurate as a result of round off error.  To make these operations faster and more efficient ECC is usually defined over two fields: a prime field $F_P$ and a binary field $F_2$.  On the prime field, the equation for the elliptical curve is slightly rewritten in its modular form:
+$$y^2 \text{ mod } p = x^3 + ax + b \text{ mod } p, \text{ where } 4a^3 + 27 b^2 \text{ mod } p \neq 0.$$  In this case, the elements of the finite field are integers between 0 and $p-1$.  When ECC is operated over the prime field, the prime p is chosen in such a way that there is a large number of points on the elliptic curve to make the cryptography secure.$^{[3]}$  When generated over the prime field, the elliptic curve is not a smooth one, which causes difficulty in geometric reasoning about point multiplication.  However, the algebraic rules still apply when using curves generated over $F_P$.  
+When curves are generated over the binary field, the following equation is used:
+$$y^2 + xy = x^3 + ax^2 + b, \text{ where } b \neq 0.$$  In this case, the elements of the field are integers with a length of at most m bits.  Additionally, these numbers can be expressed as a binary polynomial (coefficients can only be 0 or 1) of degree $m-1$.  Like before, it is important to choose an m such that there is a sufficiently large enough number of points on the elliptic curve.$^{[3]}$  
+
+
+\section{Key Sizes}
+One of the benefits to using ECC over other PKC systems is that ECC can use a smaller key size and still retain security.$^{[4]}$  Furthermore, this reduces storage and transmission requirements.  For example, an ECC public key with 256 bits should provide an equivalent level of security to a 3072 bit RSA public key.  
+Currently, the fastest algorithms to solve ECC codes require $O(\sqrt{n})$ iterations.  This implies that the size of the field used should be twice the security parameter.  For example, for a 128 bit code, an elliptic curve over the field $F_q$, where $q = 2^{256}$ should be used.  To date, the most complex ECC system known to be broken has a 112 bit key for the prime field case and a 109 bit key for the binary field case.$^{[2]}$  Both of these cases took a matter of months to break.  
+
+\section{Public Key Algorithms}
+There are many encryption algorithms related to the field of ECC.  Two of the most common are ECDH (Elliptic curve Diffie-Hellman) and ECDSA (Elliptic Curve Digital Signature Algorithm).  
+
+\subsection{Elliptic Curve Diffie-Hellman}
+ECDH is a variation of the Diffie-Hellman algorithm that is used for elliptic curves.  In reality, it's more of a key agreement protocol than an encryption algorithm, which means it tells us how keys should be generated and exchanges between users.  The ECDH algorithm is used when there are two users who want to exchange information securely in such a way that a third user can intercept it but not decode it.  To give a high level overview, there are three steps: 
+\begin{itemize}
+\item To start, the two users attempting to exchange information securely, let`s call them A and B both have individual public and private keys.  However, these keys have been generated using the same base point on the same elliptic curve.  
+
+\item Next, user A and B exchange their public keys through the third user, C, who they do not want decoding it.  Note: it`s assumed C can't decode the keys because to do that would mean solving the discrete logarithm problem, which doesn't have a polynomial time algorithm.  
+
+\item Finally, A and B can both decode the information using their own private key and the other`s public key.  
+\end{itemize}
+
+It should be noted that the Diffie-Hellman is considered to be a ``hard" problem.  Furthermore, it`s believed to be as hard as the discrete logarithm problem, although this has not been rigorously proven.$^{[4]}$  However, we know that it isn`t any harder because solving the discrete logarithm problem would mean solving the Diffie-Hellman problem.  ECDH is sometimes refered to as ECDHE, where the second E stands for Ephemeral meaning that the keys exchanged are only temporary, and not static.  This is used when A and B need to generate their keys on the fly at the time the connection is established.  Then the keys are later signed for authentication and exchanged.$^{[4]}$  
+
+\subsection{Elliptic Curve Digital Signature Algorithm}
+ECDSA attemtps to solve the problem where again there are two users A and B, and A wants to sign a message with their private key and B wants to validate the signature using A`s public key.  Also, only A should be able to produce valid signatures, but all parties should be able to check signatures.  Here, A and B are using the same domain parameters.  The ECDSA algorithm is a variation of the Digital Signature Algorithm applied to elliptic curves.  ECDSA operates on the hashed message instead the actual message itself.  There are an unlimited number of hash functions to choose from, but it is important that a cryptographically-secure one is chosen.  
+
+At a high level, the algorithm first generated a private key, which is then ``hidden" using point multiplication.  For B to verify the signature, A`s public key, the hash code and the signature are needed.  From this, two integers are calculated to form a new point on the elliptic curve.$^{[4]}$  
+
+\section{Comparison between ECC and RSA}
+We've seen the ECC does a good job with secure encryptions.  However, one may ask why even use ECC at all if we already have good RSA encryption algorithms.  One of the most significant benefits is that ECC requires a much smaller key size to guarantee the same level of security.  In the table below, we see the corresponding key sizes (in bits) between the two strategies.  
+
+\begin{center}
+\begin{tabular}{ |c|c| } 
+\hline
+RSA key size & ECC key size \\
+\hline
+1024 & 160  \\ 
+2048 & 224  \\ 
+3072 & 256  \\ 
+7680 & 384  \\ 
+15360 & 521  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+From this table, there doesn`t appear to be any sort of linear relationship between the RSA and ECC key sizes, which implies that ECC uses less memory and also that key generation and signing are considerably faster.$^{[5]}$  
+
+In the equations for an elliptic curve given above, some coefficient values produce stronger curves than other, from a security perspective.  Generally, a random seed is used in the domain parameters to generate the elliptic curve.  The random seeds often come from digits of $\pi$, Euler's number $e$, or the golden ratio.$^{[4]}$  These numbers are random because their digits are uniformly distributed.  It is not common knowlegde of where the random seeds that the NSA and NIST come from.  Many have speculated that these organizations have discovered a large class of weak elliptic curves and have tries all possibly seeds until they found a vulnerable curve.  However, it`s important to note that random and secure are not synonymous in the field, and there`s nothing to be done if the algorithm is broken no matter how long the keys are.  In this case, RSA is the stronger method because it does not require special domain parameters that can be tampered with.  Therefore, RSA is still probably a better choice over ECC if we cant`t trust authorities or can`t construct the domain parameters ourselves.$^{[6]}$  
+
+
+\section{Conclusion}
+In conclusion, we have seen that there are many benefits to the ECC strategy of public key encryption.  ECC provides an incredibly fast and efficient alternative to RSA methods due to it`s efficiency in the use of memory.  However, for an efficient implementation of ECC, it is important for the point multiplication algorithm and the field arithmetic to be efficient.  Elliptic curves have many applications including not only data encryption but also digital signatures, pseudo-random generators, integer factorization algorithms, and many other tasks.  Although a relatively recent invention (1985) but only gaining real prominence in the early 2000s, the applications to ECC are endless and the benefits over other traditional approaches are huge.  
+
+
+
+
+
+
+\begin{thebibliography}{1}
+%1
+\bibitem{IEEEhowto:kopka}
+Christof Parr and Cetink Koc, \emph{Software Implementation of Elliptic Curve Cryptography over Binary Fields}, \hskip 1em plus
+  0.5em minus 0.4em\relax Springer Berlin Heidelberg, 2000\\
+%2
+\bibitem{IEEEhowto:kopka}
+Sheueling Chang Shantz, Hans Eberle, Arvinderpal Wander, and Arun Patel, \emph{Comparing Elliptic Curve Cryptography and RSA on 8-bit CPUs}, \hskip 1em plus
+  0.5em minus 0.4em\relax Springer Berlin Heidelberg, Lecture Notes in Computer Science: 2004\\
+%3
+\bibitem{IEEEhowto:kopka}
+Anoop MS, \emph{Elliptic Curve Cryptography: An Implementation Guide}, \hskip 1em plus
+  0.5em minus 0.4em\relax InfoSECWriters, 2011\\
+%4
+\bibitem{IEEEhowto:kopka}
+Andrea Corbellini, \emph{Elliptic Curve Cryptography: A Gentle Introduction}, \hskip 1em plus
+  0.5em minus 0.4em\relax 2015\\
+%5
+\bibitem{IEEEhowto:kopka}
+Vivek Kapoor, Vivek Sonny Abraham, and Ramesh Singh, \emph{Elliptic curve cryptography}, \hskip 1em plus
+  0.5em minus 0.4em\relax ACM Ubiquity 2008\\
+%6
+\bibitem{IEEEhowto:kopka}
+David J Malan, Matt Welsh, and Michael D. Smith, \emph{A public-key infrastructure for key distribution in TinyOS based on elliptic curve cryptography}, \hskip 1em plus
+  0.5em minus 0.4em\relax Sensor and Ad Hoc Communications and Networks, 2004\\
+
+\end{thebibliography}
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+

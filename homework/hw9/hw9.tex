@@ -1,0 +1,135 @@
+%%%%%%%%%%%%%
+% 
+% Alexander Powell
+% Finite Automata
+% Homework Assignment #9
+% 11.12.2015
+% 
+%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+
+\usepackage{times,mathptm}
+\usepackage{pifont}
+\usepackage{exscale}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{enumerate}
+\usepackage{array}
+\usepackage{lipsum}
+
+
+\textwidth 6.5in
+\textheight 9in
+\oddsidemargin -0.0in
+\topmargin -0.0in
+
+\parindent 0pt     % How much the first word of a paragraph is indented. 
+\parskip 0pt	   % How much extra space to leave between paragraphs.
+
+\begin{document}
+
+\begin{center}             % If you're only centering 1 line use \centerline{}
+\begin{LARGE}
+{\bf Finite Automata Homework 9}
+\end{LARGE}
+\vskip 0.25cm      % vertical skip (0.25 cm)
+
+Due: Thursday, Nov 12\\  % force new line
+Alexander Powell
+\end{center}
+
+\begin{enumerate}
+
+\item Show that the collection of Turing recognizable languages is closed under the operation of:
+\begin{enumerate}
+\item[(b)] Concatenation
+\textbf{Solution: }
+\begin{proof}
+Let $A$ and $B$ be two Turing recognizable languages and let $M_A$ and $M_B$ be two turing machines that recognize $A$ and $B$ respectively.  We must construct a non-deterministic turing machine $M_{AB}$ that recognizes the language $AB$.  The machine $M_{AB}$ will begin by non-deterministically partitioning an input $w$ into $w_1$ and $w_2$.  It will then run $w_1$ through $M_A$.  If $M_A$ halts and rejects, then $M_{AB}$ rejects as well.  If it accepts, then it proceeds to run $w_2$ through $M_B$.  If $M_B$ halts and rejects then $M_{AB}$ rejects as well.  If $M_B$ accepts (and thus $M_A$ has already accepted) then $M_{AB}$ accepts as well.  
+
+Because we have constructed a Turing machine that recognizes the concatenation of two TRLs, we have proven that TRLs are closed under concatenation.  
+\end{proof}
+\item[(d)] Intersection
+\textbf{Solution: }
+\begin{proof}
+Let $A$ and $B$ be two Turing recognizable languages and let $M_A$ and $M_B$ be two turing machines that recognize $A$ and $B$ respectively.  We need to construct a machine $M_{AB}$ that recognizes $A \cap B$.  This new machine will take in an input string $w$.  It will first run $w$ through $M_A$.  If $M_A$ halts and rejects, then $M_{AB}$.  If $M_A$ accepts then it proceeds to run $w$ through $M_B$.  If $M_B$ halts and rejects then $M_{AB}$ rejects.  If $M_B$ accepts (and thus $M_A$ has already accepted) then $M_{AB}$ also accepts.  
+
+Therefore, because we could construct a Turing machine to recognize the intersection of two recognizable languages, we have proven that TRLs are closed under intersection.  
+\end{proof}
+\end{enumerate}
+
+
+
+
+\item Let $B$ be the set of all infinite sequences over $\Sigma = \{0,1\}$.  Show that $B$ is uncountable using a proof by diagonalization.  
+\textbf{Solution: }
+\begin{proof}
+
+Let's assume, to the contrary, that $B$ is countable.  The all the infinite sequences can be represented by $n = 1,2,3 \ldots$.  We can also define a function $f(n) = (w_{n1}, w_{n2}, w_{n3}, \ldots )$.  This can be represented in the table shown below:
+\[
+    \begin{tabular}{>{$}l<{$}|*{6}{>{$}l<{$}}}
+    n   & \text{sequence}   \\
+    \hline\vrule height 12pt width 0pt
+    1      & (w_{11}, w_{12}, w_{13}, w_{14}, \ldots)    \\
+    2      & (w_{21}, w_{22}, w_{23}, w_{24}, \ldots)    \\
+    3      & (w_{31}, w_{32}, w_{33}, w_{34}, \ldots)    \\
+    \vdots & \vdots                                      \\
+    \end{tabular} 
+\]
+Using the principle of diagonalization, we can find a sequence over the alphabet $\{0,1\}$ that is not in $f(n)$, which means that sequence is not an element of $B$.  This is a contradiction to our originial statement that we had already listed all infinite sequences in the table, so our original statement is false, and we have proven that $B$ is uncountable.  
+
+\end{proof}
+
+\item In class, we have learned that $A_D$ is non-TR, $A_{TM}$ and $HALT_{TM}$ are TR but non-TD. What can you say about their complements? Are they non-TR, TR but non-TD, or TD? Justify your answers.
+
+\textbf{Solution: }
+
+We can say that $\overline{A}_{TM}$ and $\overline{HALT}_{TM}$ are both non-TR because we already know that $A_{TM}$ and $HALT_{TM}$ are TR.  Also, just to be clear, they are certainly non-TD because if something's not recognizable it has no hope of being decidable.  
+
+As far as $\overline{A}_D$, we know that it is non-TD because TDLs are closed under complementation and we know that $A_D$ is non-TD.  However, when $A_D = \{ w\text{ }|\text{ }w \not \in L(M) \}$ then $\overline{A}_D = \{ w\text{ }|\text{ }w \in L(M) \}$.  We can construct a TM $R$ that takes in $w$ and $M$, which is then passed into $A_{TM}$ which will either accept or reject.  Therefore, $\overline{A}_D$ is TR.  
+
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

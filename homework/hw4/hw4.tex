@@ -1,0 +1,153 @@
+%%%%%%%%%%%%%
+% 
+% Alexander Powell
+% Finite Automata
+% Homework Assignment #4
+% 10.06.2015
+% 
+%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+
+\usepackage{times,mathptm}
+\usepackage{pifont}
+\usepackage{exscale}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{epsfig}
+\usepackage{tikz}
+
+
+\textwidth 6.5in
+\textheight 9in
+\oddsidemargin -0.0in
+\topmargin -0.0in
+
+\parindent 0pt     % How much the first word of a paragraph is indented. 
+\parskip 0pt	   % How much extra space to leave between paragraphs.
+
+\begin{document}
+
+\begin{center}             % If you only centering 1 line use \centerline{}
+\begin{LARGE}
+{\bf Finite Automata Homework 4}
+\end{LARGE}
+\vskip 0.25cm      % vertical skip (0.25 cm)
+
+Due: Tuesday, Oct 6\\  % force new line
+Alexander Powell
+\end{center}
+
+\begin{enumerate}
+
+\item
+Prove by the pumping lemma that the language $A$ of strings of $0$s and $1$s whose length is a power of two is not regular.
+
+\begin{proof}
+
+Let's begin by assuming that $A$ is a regular language so that we can apply the pumping lemma to $A$.  If we let $P$ be the pumping length we can choose our value of $s = 1^P$.  Clearly we have that $|1^P| \geq P$, so it satisfies the length requirement.  We can also express $|s| = |x| + |y| + |z| = 2^n, n \geq 0$.  
+
+From here we have two cases:
+\begin{enumerate}
+
+\item
+$|s|=|y|$ (or $x = \epsilon$)
+
+In this case, we know that $|y| = 2^n$.  By choosing $i = 3$ then $|y^3| = |3 \times 2^n|$ and $3 \times 2^n$ is clearly not a power of $2$.  This is a contradiction to our assumption.  
+
+\item
+$|s|>|y|$ (or $x \neq \epsilon$)
+
+In the cases where $x$ is not the empty string then $|xy^2z| = |xyz| + |y|$.  This can be rewritten to equal $2^n + |y|$.  Because the next power of $2$ after $2^n$ is $2^n + 2^n$ and $|y| < 2^n$ then $2^n + |y| < 2^n + 2^n$ so it cannot be a power of $2$.  Again, this gives us a contradiction to our assumption.  
+
+Because we reached a contradiction to the pumping lemma in both cases after assuming that $A$ is regular, we can conclude that the language $A$ is not regular.  
+
+\end{enumerate}
+
+\end{proof}
+
+\item
+Are the following languages regular? Prove you answers. 
+\begin{enumerate}
+
+\item
+$A = \{ uww^Rv | u,v,w \in {0, 1}^+ \}$
+
+\begin{proof}
+To prove this is a regular language we simply need to come up with a DFA, NFA, or regular expression that will generate the language.  The following regular expression generates every member of the language $A$.  
+
+$$ (0 \cup 1)^+(00 \cup 11)^+(0 \cup 1)^+ $$
+
+Therefore, this proves that $A$ is regular.  
+\end{proof}
+
+\item
+$B = \{ uww^Rv | u,v,w \in {0, 1}^+, |u| \geq |v| \}$
+
+The language $B$ is not a regular language.  We use a proof by contradiction to establish this.  
+
+\begin{proof}
+
+Let's assume to the contrary that $B$ is a regular language.  Then the pumping lemma applies to $B$.  This leads to two different cases: the pumping length $P$ is either even or odd.  
+
+\begin{enumerate}
+
+\item Case $1$: $P$ is even
+
+We take our $s$ to be $s = (01)^{P/2}00(10)^{P/2}$ so we can deduce the length of $s$ is $|s| = 2p+2$.  In this case, $w$ goes up through the first $0$ in the $00$ and $w^R$ begins at the second $0$ in $00$.  In this case we know that $u$ and $v$ should be of equal length.  When we examine the string resulting from fixing $i=0$ we know $|y|$ has to be at least $1$ and therefore $y^0$ will put one more character after $w^R$ than before $w$.  This is a contradiction to the rule that $|u| = |v|$.  
+
+\item Case $2$: $P$ is odd
+
+In the second case, our choice of $s$ can be written as $s = (01)^{(p-1)/2}100(01)^{(p-1)/2}$ and again $|s| = 2p+2$.  Similarly to the first case, when we fix $i=0$ we get another contradiction to the rule stating $u| \geq |v|$.  
+
+Therefore, after seeing in both cases that we arrive at a contradiction to our originial assumption, we can conclude that $B$ is not a regular language.  
+
+\end{enumerate}
+
+\end{proof}
+
+\end{enumerate}
+
+Collaborators: Derek O'Connell
+
+\item
+Problem 1.54 (a) on page 91. Use closure properties.
+
+We are given the language $F = \{ a^i b^j c^k | i,j,k \geq 0$ and if $i = 1$, then $j = k \}$.  
+Prove that $F$ is not regular:
+
+\begin{proof}
+
+To prove $F$ is not regular, let's assume to the contrary that $F$ is regular and thus the pumping lemma applies.  Now, if we come up with a new language $L = \{ a b^i c^j | i,j \geq 0 \}$, then $L$ is clearly regular because it can be described by the regular expression $a b^* c^*$ and therefore the intersection of these two languages which we can call $G = F \cap L$ is regular as well, according to the closure properties of regular languages.  The intersection, $G$, of these languages can further be written as $G = \{ a b^i c^i | i \geq 0 \}$.  Now, using the pumping lemma with $P$ being the pumping length we have $s = ab^Pc^P \in G$ and $|s| > P$ so there exists $x,y,$ and $z$ such that $xy^iz \in G, \forall i \geq 0$ and $|y| > 0$ and $|xy| \leq P$.  Now, let's fix $i=2$ and from here there are two cases to consider:
+
+\begin{enumerate}
+\item
+Case $1$: $y$ includes $a$ (so $x=\epsilon$)
+
+If $y$ includes $a$ then our $s$ looks like $xyyz$ which contains two $a$s, giving us a contradiction.  
+
+\item
+Case $2$: $y$ does not include $a$ (so $x \neq \epsilon$)
+
+If $y$ does not include $a$ then it either contains both $b$ and $c$ or either $b$ or $c$.  In these two subcases then there are either at least $2$ $bc$s in $xyyz$ or the number of $b$s and $c$s in $xyyz$ is not equal, respectively.  Again, this contradicts our assumtion.  
+
+In all cases we eventually arrive at a contradiction to the statement that $G = F \cap L$ was regular.  Since we know $L$ is definitely a regular language then we can conclude that $F$ is not regular.  
+
+\end{enumerate}
+
+\end{proof}
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
+
+
+
+
+
